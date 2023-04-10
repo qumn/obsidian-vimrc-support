@@ -78,11 +78,53 @@ export default class VimrcPlugin extends Plugin {
 		return keyMap;
 	}
 
+  async mapNormanKeyboard() {
+    console.log("codemirrorvimobject", this.codeMirrorVimObject);
+    const _mapCommand = this.codeMirrorVimObject._mapCommand;
+
+    const normanDefualtKeyMap = [
+      { keys: '<Left>', type: 'keyToKey', toKeys: 'y' },
+      { keys: '<Right>', type: 'keyToKey', toKeys: 'o' },
+      { keys: '<Up>', type: 'keyToKey', toKeys: 'i' },
+      { keys: '<Down>', type: 'keyToKey', toKeys: 'n' },
+      { keys: 'g<Up>', type: 'keyToKey', toKeys: 'gi' },
+      { keys: 'g<Down>', type: 'keyToKey', toKeys: 'gn' },
+      { keys: '<Space>', type: 'keyToKey', toKeys: 'o' },
+      { keys: 'y', type: 'motion', motion: 'moveByCharacters', motionArgs: { forward: false }},
+      { keys: 'o', type: 'motion', motion: 'moveByCharacters', motionArgs: { forward: true }},
+      { keys: 'n', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, linewise: true }},
+      { keys: 'i', type: 'motion', motion: 'moveByLines', motionArgs: { forward: false, linewise: true }},
+      { keys: 'l', type: 'motion', motion: 'moveToOtherHighlightedEnd', context:'visual'},
+      { keys: 'gn', type: 'motion', motion: 'moveByDisplayLines', motionArgs: { forward: true }},
+      { keys: 'gi', type: 'motion', motion: 'moveByDisplayLines', motionArgs: { forward: false }},
+      { keys: 'L', type: 'motion', motion: 'moveToOtherHighlightedEnd', motionArgs: {sameLine: true}, context:'visual'},
+      { keys: 'l', type: 'action', action: 'newLineAndEnterInsertMode', isEdit: true, interlaceInsertRepeat: true, actionArgs: { after: true }, context: 'normal' },
+      { keys: 'L', type: 'action', action: 'newLineAndEnterInsertMode', isEdit: true, interlaceInsertRepeat: true, actionArgs: { after: false }, context: 'normal' },
+      { keys: 'r', type: 'action', action: 'enterInsertMode', isEdit: true, actionArgs: { insertAt: 'inplace' }, context: 'normal' },
+      { keys: 'R', type: 'action', action: 'enterInsertMode', isEdit: true, actionArgs: { insertAt: 'firstNonBlank'}, context: 'normal' },
+      { keys: 'R', type: 'action', action: 'enterInsertMode', isEdit: true, actionArgs: { insertAt: 'startOfSelectedArea' }, context: 'visual' },
+      { keys: 'j', type: 'operator', operator: 'yank' },
+      { keys: 'J', type: 'operatorMotion', operator: 'yank', motion: 'expandToLine', motionArgs: { linewise: true }, context: 'normal'},
+      { keys: 'J', type: 'operator', operator: 'yank', operatorArgs: { linewise: true }, context: 'visual'},
+      { keys: 'h', type: 'motion', motion: 'findNext', motionArgs: { forward: true, toJumplist: true }},
+      { keys: 'H', type: 'motion', motion: 'findNext', motionArgs: { forward: false, toJumplist: true }},
+      { keys: 'k', type: 'action', action: 'enterInsertMode', isEdit: true, actionArgs: { replace: true }, context: 'normal'},
+      { keys: 'K', type: 'operator', operator: 'change', operatorArgs: { linewise: true, fullLine: true }, context: 'visual', exitVisualBlock: true},
+    ]
+
+    for (const key of normanDefualtKeyMap) {
+      _mapCommand(key);
+    }
+
+  }
+
 	async initialize() {
 		if (this.initialized)
 			return;
 
 		this.codeMirrorVimObject = (window as any).CodeMirrorAdapter?.Vim;
+
+    await this.mapNormanKeyboard();
 
 		this.registerYankEvents(activeWindow);
 		this.app.workspace.on("window-open", (workspaceWindow, w) => {
