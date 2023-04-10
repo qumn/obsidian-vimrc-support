@@ -1,6 +1,7 @@
 # What does this fork do?
-I use Norman keyboard layout instead of qwerty. so I need remap some key such as `h`, `j`, `k` `l`. 
-But It would lead to not work for me using `nmap`/`noremap`... in .obsidian.vimrc.
+I use Norman keyboard layout instead of qwerty. so I need remap some key such as `h`, `j`, `k` `l`.   
+
+But It not work for me using `nmap`/`noremap`... in .obsidian.vimrc.
 
 # Obsidian Vimrc Support Plugin
 
